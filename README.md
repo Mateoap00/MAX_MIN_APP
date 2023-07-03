@@ -24,9 +24,13 @@ Pasos para configurar y ejecutar el proyecto Django "MAX_MIN_APP".
    - Abrir el archivo `.env` y agregar la nueva clave generada: `SECRET_KEY=KEY-GENERADA`.
 9. Configurar la base de datos:
    - Abrir MySQL Workbench y conectarse usando un usuario existente (puede ser root/admin).
-   - Crear la base de datos `Max_Min_App` con la siguiente consulta SQL: `CREATE DATABASE Max_Min_App;`.
-   - En el archivo `.env` abierto anteriormente, agregar las credenciales de la base de datos y la conexión:
+   - Crear la base de datos `Max_Min_App` con la siguiente consulta SQL: 
+      ```
+      CREATE DATABASE Max_Min_App;
+      ```
+   - En el archivo `.env` abierto anteriormente, agregar las credenciales de la base de datos y la conexión, el archivo .env ahora contiene:
      ```
+     SECRET_KEY=KEY-GENERADA
      DB_NAME=Max_Min_App
      DB_USER=*usuario de la base de datos, root/admin u otro.
      DB_PASSWORD=*contraseña del usuario de la base de datos
