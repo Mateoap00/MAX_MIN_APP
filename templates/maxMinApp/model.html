@@ -1,0 +1,70 @@
+{% extends 'maxMinApp/index.html' %}
+{% block title %}Model{% endblock %}
+{% block content %}
+<div class="mt-3 mb-3 col-6 col-md-12 mx-auto">
+    <form method="post">
+        <div class="row mb-3 resDefinition">
+            {% if operation == 'max' %}
+            <h3>Función Objetivo a Maximizar</h3>
+            {% else %}
+            <h3>Función Objetivo a Minimizar</h3>
+            {% endif%}
+
+            {% for var in variables.range %}
+            {% if var == variables.value %}
+            <div class="col-auto col-md-2 col-xl-1">
+                <input type="number" class="form-control varConstant" placeholder="0">
+            </div>
+            <div class="col-12 col-md-2 col-xl-1">
+                <label class="form-label">X{{var}} </label>
+            </div>
+            {% else %}
+            <div class="col-auto col-md-2 col-xl-1">
+                <input type="number" class="form-control varConstant" placeholder="0">
+            </div>
+            <div class="col-auto col-md-2 col-xl-1">
+                <label class="form-label">X{{var}} +</label>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <h3>Restricciones</h3>
+        {% for res in restrictions.range %}
+        <div class="row mb-3 resDefinition">
+            <h5>Restricción #{{res}}:</h3>
+                {% for var in variables.range %}
+                {% if var == variables.value %}
+                <div class="col-auto col-md-2 col-xl-1">
+                    <input type="number" class="form-control varConstant" placeholder="0">
+                </div>
+                <div class="col-12 col-md-2 col-xl-1">
+                    <label class="form-label">X{{var}}</label>
+                </div>
+                {% else %}
+                <div class="col-auto col-md-2 col-xl-1">
+                    <input type="number" class="form-control varConstant" placeholder="0">
+                </div>
+                <div class="col-auto col-md-2 col-xl-1">
+                    <label class="form-label">X{{var}} +</label>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <div class="col-auto col-md-2 col-xl-1">
+                    <select class="form-select resEqSign" aria-label="Default select example" id="selectEq"
+                        name="selectEq">
+                        <option selected value="<=">&le;</option>
+                        <option value=">=">&ge;</option>
+                    </select>
+                </div>
+                <div class="col-auto col-md-2 col-xl-1">
+                    <input type="number" class="col-sm form-control resEqTo" required placeholder="0">
+                </div>
+        </div>
+        {% endfor %}
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary" id="resolveModelBtn" name="resolveModelBtn">Resolver</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
