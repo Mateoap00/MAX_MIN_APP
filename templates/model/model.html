@@ -1,0 +1,112 @@
+{% extends 'maxMinApp/index.html' %}
+{% block title %}Modelado{% endblock %}
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<div class="col-6 col-md-8 mx-auto">
+    <form action="{% url 'model' %}" method="post">
+        {% csrf_token %}
+        <h1 class="row mt-3 mb-3 justify-content-center">Calculadora Simplex</h1>
+        <select class="form-select mb-3" aria-label="Default select example" id="operation" name="operation">
+            <option selected value="max">Maximizar</option>
+            <option value="min">Minimizar</option>
+        </select>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label for="variables" class="form-label">Numero de variables</label>
+                <input type="number" class="form-control" id="variables" name="variables" required min="2"
+                    placeholder="2">
+            </div>
+            <div class="col-6">
+                <label for="restrictions" class="form-label">Numero de restricciones</label>
+                <input type="number" class="form-control" id="restrictions" name="restrictions" required min="2"
+                    placeholder="2">
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary" id="generateModelBtn" name="generateModelBtn">Generar</button>
+        </div>
+    </form>
+</div>
+
+{% endif %}
+
+{% if showModel %}
+
+<div class="mt-3 mb-3 col-6 col-md-12 mx-auto">
+    <form action="{% url 'solve' %}" method="get">
+        <input type="hidden" class="form-control" name="variables" value="{{ variables.value }}">
+        <input type="hidden" class="form-control" name="restrictions" value="{{ restrictions.value }}">
+        <input type="hidden" class="form-control" name="operation" value="{{ operation }}">
+        <div class=" row mb-3" name="objFunDefinition">
+            {% if operation == 'max' %}
+            <h3>Función Objetivo a Maximizar</h3>
+            {% else %}
+            <h3>Función Objetivo a Minimizar</h3>
+            {% endif%}
+
+            {% for var in variables.range %}
+            {% if var == variables.value %}
+            <div class="col-auto col-md-2 col-xl-1">
+                <input type="number" class="form-control" placeholder="0" value="0" name="funCoeff{{ var }}">
+            </div>
+            <div class="col-12 col-md-2 col-xl-1">
+                <label class="form-label">X{{var}} </label>
+            </div>
+            {% else %}
+            <div class="col-auto col-md-2 col-xl-1">
+                <input type="number" class="form-control" placeholder="0" value="0" name="funCoeff{{ var }}">
+            </div>
+            <div class="col-auto col-md-2 col-xl-1">
+                <label class="form-label">X{{var}} +</label>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <h3>Restricciones</h3>
+        {% for cons in restrictions.range %}
+        <div class="row mb-3" name="constDefinition">
+            <h5>Restricción #{{cons}}:</h3>
+                {% for var in variables.range %}
+                {% if var == variables.value %}
+                <div class="col-auto col-md-2 col-xl-1">
+                    <input type="number" class="form-control" placeholder="0" value="0"
+                        name="constCoeff({{ cons }},{{ var }})">
+                </div>
+                <div class="col-12 col-md-2 col-xl-1">
+                    <label class="form-label">X{{var}}</label>
+                </div>
+                {% else %}
+                <div class="col-auto col-md-2 col-xl-1">
+                    <input type="number" class="form-control" placeholder="0" value="0"
+                        name="constCoeff({{ cons }},{{ var }})">
+                </div>
+                <div class="col-auto col-md-2 col-xl-1">
+                    <label class="form-label">X{{var}} +</label>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <div class="col-auto col-md-2 col-xl-1">
+                    <select class="form-select resEqSign" aria-label="Default select example"
+                        name="constSelectEq{{ cons }}">
+                        <option selected value="<=">&le;</option>
+                        <option value=">=">&ge;</option>
+                    </select>
+                </div>
+                <div class="col-auto col-md-2 col-xl-1">
+                    <input type="number" class="col-sm form-control" required placeholder="0" value="0"
+                        name="constEqTo{{ cons }}">
+                </div>
+        </div>
+        {% endfor %}
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary" id="resolveModelBtn" name="resolveModelBtn">Resolver</button>
+        </div>
+    </form>
+</div>
+
+{% endif %}
+
+{% endblock %}

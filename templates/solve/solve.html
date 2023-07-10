@@ -1,9 +1,9 @@
 {% extends 'maxMinApp/index.html' %}
-{% block title %}Model{% endblock %}
+{% block title %}Solución{% endblock %}
 {% block content %}
-<div class="mt-3 mb-3 col-6 col-md-12 mx-auto">
+<!-- <div class="mt-3 mb-3 col-6 col-md-12 mx-auto">
     <form method="post">
-        <div class="row mb-3 resDefinition">
+        <div class="row mb-3 funObjDefinition">
             {% if operation == 'max' %}
             <h3>Función Objetivo a Maximizar</h3>
             {% else %}
@@ -13,14 +13,14 @@
             {% for var in variables.range %}
             {% if var == variables.value %}
             <div class="col-auto col-md-2 col-xl-1">
-                <input type="number" class="form-control varConstant" placeholder="0">
+                <input type="number" class="form-control" placeholder="0" name="funVarConstant">
             </div>
             <div class="col-12 col-md-2 col-xl-1">
                 <label class="form-label">X{{var}} </label>
             </div>
             {% else %}
             <div class="col-auto col-md-2 col-xl-1">
-                <input type="number" class="form-control varConstant" placeholder="0">
+                <input type="number" class="form-control" placeholder="0" name="funVarConstant">
             </div>
             <div class="col-auto col-md-2 col-xl-1">
                 <label class="form-label">X{{var}} +</label>
@@ -31,19 +31,19 @@
 
         <h3>Restricciones</h3>
         {% for res in restrictions.range %}
-        <div class="row mb-3 resDefinition">
+        <div class="row mb-3" name="constDefinition">
             <h5>Restricción #{{res}}:</h3>
                 {% for var in variables.range %}
                 {% if var == variables.value %}
                 <div class="col-auto col-md-2 col-xl-1">
-                    <input type="number" class="form-control varConstant" placeholder="0">
+                    <input type="number" class="form-control" placeholder="0" name="constVarConstant">
                 </div>
                 <div class="col-12 col-md-2 col-xl-1">
                     <label class="form-label">X{{var}}</label>
                 </div>
                 {% else %}
                 <div class="col-auto col-md-2 col-xl-1">
-                    <input type="number" class="form-control varConstant" placeholder="0">
+                    <input type="number" class="form-control" placeholder="0" name="constVarConstant">
                 </div>
                 <div class="col-auto col-md-2 col-xl-1">
                     <label class="form-label">X{{var}} +</label>
@@ -52,13 +52,13 @@
                 {% endfor %}
                 <div class="col-auto col-md-2 col-xl-1">
                     <select class="form-select resEqSign" aria-label="Default select example" id="selectEq"
-                        name="selectEq">
+                        name="constSelectEq">
                         <option selected value="<=">&le;</option>
                         <option value=">=">&ge;</option>
                     </select>
                 </div>
                 <div class="col-auto col-md-2 col-xl-1">
-                    <input type="number" class="col-sm form-control resEqTo" required placeholder="0">
+                    <input type="number" class="col-sm form-control" required placeholder="0" name="constEqTo">
                 </div>
         </div>
         {% endfor %}
@@ -66,5 +66,7 @@
             <button type="submit" class="btn btn-primary" id="resolveModelBtn" name="resolveModelBtn">Resolver</button>
         </div>
     </form>
-</div>
+</div> -->
+
+<h1>Resolviendo!</h1>
 {% endblock %}

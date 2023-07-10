@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import CustomUser
 
-# Create your views here.
 def loginUser(request):
     if request.method == 'POST':
         username = request.POST["username"]
@@ -12,7 +11,7 @@ def loginUser(request):
             login(request, user)
             print('Login succeed!')
             # login(request, user)
-            return redirect('index')
+            return redirect('model')
         else:
             print('Login failed with wrong credentials!')
             return redirect('login')

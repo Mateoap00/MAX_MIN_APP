@@ -48,34 +48,6 @@
         </div>
     </nav>
     <div class="container">
-        {% if user.is_authenticated %}
-        <div class="col-6 col-md-8 mx-auto">
-            <form method="post">
-                {% csrf_token %}
-                <h1 class="row mt-3 mb-3 justify-content-center">Calculadora Simplex</h1>
-                <select class="form-select mb-3" aria-label="Default select example" id="operation" name="operation">
-                    <option selected value="max">Maximizar</option>
-                    <option value="min">Minimizar</option>
-                </select>
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label for="restrictions" class="form-label">Numero de restricciones</label>
-                        <input type="number" class="form-control" id="restrictions" name="restrictions" required min="2"
-                            placeholder="2">
-                    </div>
-                    <div class="col-6">
-                        <label for="variables" class="form-label">Numero de variables</label>
-                        <input type="number" class="form-control" id="variables" name="variables" required min="2"
-                            placeholder="2">
-                    </div>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary" id="generateModelBtn"
-                        name="generateModelBtn">Generar</button>
-                </div>
-            </form>
-        </div>
-        {% endif %}
         {% block content%}
 
         {% endblock%}
