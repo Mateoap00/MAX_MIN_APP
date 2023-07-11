@@ -9,6 +9,7 @@ class Simplex:
     nVar = 0
     objFun = []
     constraints = []
+    modelString = {}
     firstTable = {}
     lastTable = {}
     allTables = []
@@ -29,12 +30,33 @@ class Simplex:
 
     def model(self, objFun, constraints):
         objAux = []
+        modelString = {
+            'objFun': '',
+            'constraints': []
+        }
         self.constraints = []
         for i in range(len(objFun)):
             objAux.append(-1 * int(objFun[i]))
         objAux.append(0)
         
         self.objFun = np.array(objAux)
+
+        objFunString = ''
+        for i in range(0, len(objFun)-1):
+            objFunString = objFunString + '(' + str(objFun[i]) + ')' + 'X' + str(i+1) + ' + '
+        objFunString = objFunString + '(' + str(objFun[len(objFun)-1]) + ')' + 'X' + str(len(objFun)-1)       
+        modelString['objFun'] = objFunString
+
+        for constraint in constraints:
+            constraintString = ''
+            for i in range(0, len(constraint)-3):
+                constraintString = constraintString + '(' + str(constraint[i]) + ')' + 'X' + str(i+1) + ' + '
+            constraintString = constraintString + '(' + str(constraint[len(constraint)-3]) + ')' + 'X' + str(len(constraint)-3)
+            constraintString = constraintString + ' ' + str(constraint[len(constraint)-2]) + ' '
+            constraintString = constraintString + str(constraint[len(constraint)-1])       
+            modelString['constraints'].append(constraintString)
+        
+        self.modelString = modelString
         
         for constraint in constraints:
             newConstraint = []
@@ -59,6 +81,68 @@ class Simplex:
             return str(value.numerator)
         else:
             return f"{value.numerator}/{value.denominator}"
+        
+    def format_table(self, type, simplex_table, table_name, colsNames, rowsNames, pivot_col, pivot_row, pivot_value, entering_row, table_values):
+        colsNames = colsNames.copy()
+        rowsNames = rowsNames.copy()        
+        table_values = table_values.copy()
+        if type == 'first':
+            formatTable = {
+                'tableName': table_name,
+                'colsNames': colsNames,
+                'rowsNames': rowsNames,
+                'table': {row: val for row, val in zip(rowsNames, table_values)} 
+            }
+        elif type == 'last':
+            simplex_table = simplex_table.copy()
+            rColumn = {
+                k: v for k, v in zip(
+                    rowsNames, 
+                    [self.format_fraction(Fraction(x)) for x in simplex_table[:, -1].copy()]
+                )
+            }
+            formatTable = {
+                'tableName': table_name,
+                'colsNames': colsNames,
+                'rowsNames': rowsNames,
+                'table': {row: val for row, val in zip(rowsNames, table_values)},
+                'rColumn': rColumn 
+            }
+        else:
+            simplex_table = simplex_table.copy()
+            entire_pivot_col = [self.format_fraction(x) for x in simplex_table[:, pivot_col]]
+            entire_pivot_row = [self.format_fraction(x) for x in simplex_table[pivot_row]]
+            entering_row = entering_row.copy()
+            pivotCol = {
+                    'colName': colsNames[pivot_col],
+                    'colNum': pivot_col.copy(),
+                    'entireCol': entire_pivot_col.copy(),
+                    'value': entire_pivot_col[0]
+            }
+            pivotRow = {
+                    'rowName': rowsNames[pivot_row],
+                    'rowNum': pivot_row,
+                    'entireRow': entire_pivot_row.copy(),
+                    'value': entire_pivot_row[pivot_col]
+            }
+            pivotValue = pivot_value
+            enteringRow = {
+                    'rowName': colsNames[pivot_col],
+                    'entireRow': entering_row
+            }
+            table = {row: val for row, val in zip(rowsNames, table_values)}
+
+            formatTable = {
+                'tableName': table_name,
+                'colsNames': colsNames,
+                'rowsNames': rowsNames,
+                'table': table,
+                'pivotCol': pivotCol,
+                'pivotRow': pivotRow,
+                'pivotValue': pivotValue,
+                'enteringRow': enteringRow
+            }
+        return formatTable
     
     def format_solution(self, lastTableSolution):
         solution = {}
@@ -74,7 +158,7 @@ class Simplex:
             if name in lastTableSolution:
                 values.append(lastTableSolution[name])
             else:
-                values.append(0)
+                values.append('0')
         
         solution = {
                     k: v for k, v in zip(
@@ -88,19 +172,22 @@ class Simplex:
         num_variables = len(z_row) - 1
         num_constraints = len(constraints)
 
+        # Genera el nombre de las columnas de la tabla simplex inicial.
         column_names = ['X' + str(i) for i in range(1, num_variables + 1)]
         column_names += ['S' + str(i) for i in range(1, num_constraints + 1)]
         column_names.append('R')
 
+        # Genera el nombre de las filas de la tabla simplex inicial.
         row_names = []
         row_names.append('Z')
         row_names += ['S' + str(i) for i in range(1, num_constraints + 1)]
 
-        # Create the initial simplex table
+        # Genera la tabla simplex inicial con 0s.
         simplex_table = np.zeros((num_constraints + 1, num_variables + num_constraints + 1), dtype=object)
         simplex_table[0][:num_variables] = [Fraction(x) for x in z_row[:-1]]
         simplex_table[0][-1] = Fraction(z_row[-1])
 
+        # Si alguna restricción tiene signo >= se cambia de sentido toda la restricción.
         for constraint in constraints:
             if constraint[-2] == '>=':
                 constraint[-2] = '<='
@@ -108,6 +195,7 @@ class Simplex:
                     if str(constraint[i]) != '<=':
                         constraint[i] = str(-1 * int(constraint[i]))
 
+        # Agrega variables de holgura.
         for i, constraint in enumerate(constraints, start=1):
             simplex_table[i][:num_variables] = [Fraction(x) for x in constraint[:-2]]
             if constraint[-2] == '<=':
@@ -116,123 +204,116 @@ class Simplex:
                 simplex_table[i][num_variables+i-1] = -1  # Add surplus variables
             simplex_table[i][-1] = Fraction(constraint[-1])  # Right-hand side value
 
-        # Display the initial table
-        firstTable = {
-            'colsNames': column_names.copy(),
-            'rowsNames': row_names.copy(),
-            'table': []
-        }
+        # Matriz con los valores de la tabla inicial.
+        auxTable = []
         for row in simplex_table:
             auxRow = [self.format_fraction(x) for x in row]
-            firstTable['table'].append(auxRow.copy())
+            auxTable.append(auxRow.copy())
 
-        self.allTables.append(firstTable.copy())
-        self.firstTable = firstTable.copy()
+        # Genera la tabla simplex inicial y se guarda.
+        firstTable = self.format_table(
+            'first', 
+            None, 
+            '1ra', 
+            column_names, 
+            row_names, 
+            None, 
+            None, 
+            None, 
+            None, 
+            auxTable
+        )
+        
+        self.firstTable = firstTable
 
         tableNum = 0
         done = False
-        # Iterate until no negative values in the Z row
+        # Se repite hasta que el proceso termine, termina si no existe ningún numero negativo en la fila Z
         while done == False:
             tableNum = tableNum + 1
-            toSaveTable = {}
 
+            # Columna pivote.
             pivot_column = np.argmin(simplex_table[0][:-1])
 
+            # Fila pivote.
             pivot_row = -1
             min_ratio = float('inf')
             for i in range(1, num_constraints + 1):
+                # Operaciones entre filas para convertir números en columna pivotes a 0.
                 if simplex_table[i][pivot_column] > 0:
                     ratio = simplex_table[i][-1] / simplex_table[i][pivot_column]
                     if ratio < min_ratio:
                         min_ratio = ratio
                         pivot_row = i
 
+            # Numero pivote.
             pivot_value = simplex_table[pivot_row][pivot_column]
 
-            entire_pivot_col = [self.format_fraction(x) for x in simplex_table[:, pivot_column]]
-            entire_pivot_row = [self.format_fraction(x) for x in simplex_table[pivot_row]]
-
-            toSaveTable = {
-                'colsNames': column_names.copy(),
-                'rowsNames': row_names.copy(),
-                'table': [],
-                'pivotCol': {
-                    'colName': column_names[pivot_column],
-                    'colNum': pivot_column.copy(),
-                    'entireCol': entire_pivot_col.copy(),
-                    'value': entire_pivot_col[0]
-                    },
-                'pivotRow': {
-                    'rowName': row_names[pivot_row],
-                    'rowNum': pivot_row,
-                    'entireRow': entire_pivot_row.copy(),
-                    'value': entire_pivot_row[pivot_column]
-                },
-                'pivotNum': pivot_value,
-                'enteringRow': {
-                    'rowName': column_names[pivot_column],
-                    'entireRow': []
-                }
-            }
-
+            # Matriz con los valores de la nueva tabla.
+            auxTable = []
             for row in simplex_table:
                 auxRow = [self.format_fraction(x) for x in row]
-                toSaveTable['table'].append(auxRow.copy())
+                auxTable.append(auxRow.copy())
+            
+            row_names_aux = row_names.copy()
 
+            # Cambia el nombre de la fila pivote por la columna pivote.
             row_names[pivot_row] = column_names[pivot_column]
-            # Perform row operations
-            simplex_table[pivot_row] = simplex_table[pivot_row] / pivot_value
 
+            simplex_table_aux = simplex_table.copy()
+
+            # Genera la fila entrante para la nueva tabla simplex.
+            simplex_table[pivot_row] = simplex_table[pivot_row] / pivot_value
             entering_row = [self.format_fraction(x) for x in simplex_table[pivot_row]]
 
-            toSaveTable['enteringRow']['entireRow'] = entering_row.copy()
-            self.allTables.append(toSaveTable.copy())
+            # Genera nueva tabla simplex con toda la información y se guarda.
+            newTable = self.format_table(
+                'new',
+                simplex_table_aux,
+                '#'+str(tableNum),
+                column_names,
+                row_names_aux,
+                pivot_column,
+                pivot_row,
+                pivot_value,
+                entering_row,
+                auxTable
+            )
+            self.allTables.append(newTable)
 
             for i in range(num_constraints + 1):
                 if i != pivot_row:
                     factor = simplex_table[i][pivot_column]
                     simplex_table[i] -= factor * simplex_table[pivot_row]
-
-            # Display the next simplex table
-            # print("Next Simplex Table:")
-            # print(column_names)
-            # print(row_names)
-            # for row in simplex_table:
-            #     auxRow = [self.format_fraction(x) for x in row]
-            #     print(auxRow)
             
             if np.any(simplex_table[0][:-1] < 0):
                 done = False
-            else:
-                done = True
-                lastTable = {
-                    'colNames': column_names.copy(),
-                    'rowNames': row_names.copy(),
-                    'table': [],
-                    'solution': {}
-                }
+            else: # Si ya no existe ningún numero negativo, se genera la tabla final.
+                done = True                                
 
+                # Matriz con los valores de la tabla final.
+                auxTable = []
                 for row in simplex_table:
                     auxRow = [self.format_fraction(x) for x in row]
-                    lastTable['table'].append(auxRow.copy())
-                
-                solution = {
-                    'varNames': row_names.copy(),
-                    'values': [self.format_fraction(Fraction(x)) for x in simplex_table[:, -1].copy()]
-                }
+                    auxTable.append(auxRow.copy())
 
-                solution = {
-                    k: v for k, v in zip(
-                        row_names.copy(), 
-                        [self.format_fraction(Fraction(x)) for x in simplex_table[:, -1].copy()]
-                    )
-                }
+                # Genera tabla simplex final con toda la información y se guarda.
+                lastTable = self.format_table(
+                    'last',
+                    simplex_table,
+                    'Ult',
+                    column_names,
+                    row_names,
+                    None,
+                    None,
+                    None,
+                    None,
+                    auxTable
+                )
+                self.lastTable = lastTable
 
-                lastTable['solution'] = solution
-
-                self.allTables.append(lastTable.copy())
-                self.lastTable = lastTable.copy()
-                self.solution =  self.format_solution(solution.copy())
+                # Genera la solución del problema de maximizacion.
+                self.solution =  self.format_solution(lastTable['rColumn'])                
 
         return simplex_table
 

@@ -42,26 +42,15 @@ def solve(request):
             allConstraints    
         )
 
-        print()
-        i = 0
-        for table in run.allTables:
-            i = i+1
-            print('########## Table #', i, ' ##########')
-            for prop in table:
-                if prop == 'table':
-                    print('table: ')
-                    for row in table[prop]:
-                        print(row)
-                else:
-                    print(prop, ': ', table[prop])
-                    print()
-            print()
-
-        print("Optimal Solution:")
-        print(run.solution)
+        print('Model: ', run.modelString)
+        print('Optimal Solution: ', run.solution)
 
         context = {
-            'simplex': run
+            'model': run.modelString,
+            'allTables': run.allTables,
+            'firstTable': run.firstTable,
+            'lastTable': run.lastTable,
+            'solution': run.solution
         }
 
         return render(request, 'solve/solve.html', context)
