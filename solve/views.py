@@ -46,6 +46,7 @@ def solve(request):
         print('Optimal Solution: ', run.solution)
 
         context = {
+            'operation': run.operation,
             'model': run.modelString,
             'allTables': run.allTables,
             'firstTable': run.firstTable,

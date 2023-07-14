@@ -1,8 +1,6 @@
 import numpy as np
 from fractions import Fraction
 
-############################# WORKS FOR >= CONSTRAINTS ##########################
-
 class Simplex:
     operation = '' 
     nRes = 0
@@ -44,14 +42,14 @@ class Simplex:
         objFunString = ''
         for i in range(0, len(objFun)-1):
             objFunString = objFunString + '(' + str(objFun[i]) + ')' + 'X' + str(i+1) + ' + '
-        objFunString = objFunString + '(' + str(objFun[len(objFun)-1]) + ')' + 'X' + str(len(objFun)-1)       
+        objFunString = objFunString + '(' + str(objFun[len(objFun)-1]) + ')' + 'X' + str(len(objFun))       
         modelString['objFun'] = objFunString
 
         for constraint in constraints:
             constraintString = ''
             for i in range(0, len(constraint)-3):
                 constraintString = constraintString + '(' + str(constraint[i]) + ')' + 'X' + str(i+1) + ' + '
-            constraintString = constraintString + '(' + str(constraint[len(constraint)-3]) + ')' + 'X' + str(len(constraint)-3)
+            constraintString = constraintString + '(' + str(constraint[len(constraint)-3]) + ')' + 'X' + str(len(constraint)-2)
             constraintString = constraintString + ' ' + str(constraint[len(constraint)-2]) + ' '
             constraintString = constraintString + str(constraint[len(constraint)-1])       
             modelString['constraints'].append(constraintString)
@@ -69,7 +67,6 @@ class Simplex:
 
     def solve(self):
         try:
-            # Solve the problem
             final_table = self.simplex_method(self.objFun, self.constraints)
         except ZeroDivisionError:
             print("Error: Division by zero occurred.")
@@ -187,7 +184,7 @@ class Simplex:
         simplex_table[0][:num_variables] = [Fraction(x) for x in z_row[:-1]]
         simplex_table[0][-1] = Fraction(z_row[-1])
 
-        # Si alguna restricción tiene signo >= se cambia de sentido toda la restricción.
+        # Si alguna restricción tiene signo >= se cambia de sentido toda la restricción multiplicando por (-1).
         for constraint in constraints:
             if constraint[-2] == '>=':
                 constraint[-2] = '<='
@@ -199,10 +196,10 @@ class Simplex:
         for i, constraint in enumerate(constraints, start=1):
             simplex_table[i][:num_variables] = [Fraction(x) for x in constraint[:-2]]
             if constraint[-2] == '<=':
-                simplex_table[i][num_variables+i-1] = 1  # Add slack variables
+                simplex_table[i][num_variables+i-1] = 1
             elif constraint[-2] == '>=':
-                simplex_table[i][num_variables+i-1] = -1  # Add surplus variables
-            simplex_table[i][-1] = Fraction(constraint[-1])  # Right-hand side value
+                simplex_table[i][num_variables+i-1] = -1
+            simplex_table[i][-1] = Fraction(constraint[-1])
 
         # Matriz con los valores de la tabla inicial.
         auxTable = []
@@ -228,21 +225,25 @@ class Simplex:
 
         tableNum = 0
         done = False
-        # Se repite hasta que el proceso termine, termina si no existe ningún numero negativo en la fila Z
+        # Se repite hasta que el proceso termine, termina si no existe ningún numero negativo (maximiza) o ningún numero positivo 
+        # (minimiza) en la fila Z.
         while done == False:
             tableNum = tableNum + 1
 
-            # Columna pivote.
-            pivot_column = np.argmin(simplex_table[0][:-1])
+            # Columna pivote, la columna con el menor numero negativo cuando se maximiza y mayor numero positivo cuando se minimiza.
+            if self.operation == 'max':
+                pivot_column = np.argmin(simplex_table[0][:-1])            
+            elif self.operation == 'min':
+                pivot_column = np.argmax(simplex_table[0][:-1])
 
             # Fila pivote.
             pivot_row = -1
             min_ratio = float('inf')
             for i in range(1, num_constraints + 1):
-                # Operaciones entre filas para convertir números en columna pivotes a 0.
+                # Operaciones entre filas para convertir números en columna pivote a 0.
                 if simplex_table[i][pivot_column] > 0:
                     ratio = simplex_table[i][-1] / simplex_table[i][pivot_column]
-                    if ratio < min_ratio:
+                    if ratio < min_ratio and ratio > 0:
                         min_ratio = ratio
                         pivot_row = i
 
@@ -285,10 +286,13 @@ class Simplex:
                 if i != pivot_row:
                     factor = simplex_table[i][pivot_column]
                     simplex_table[i] -= factor * simplex_table[pivot_row]
-            
-            if np.any(simplex_table[0][:-1] < 0):
+
+            # Si ya no existe ningún numero negativo cuando se maximiza o positivo cuando se minimiza, se genera la tabla final.
+            if self.operation == 'max' and np.any(simplex_table[0][:-1] < 0):
                 done = False
-            else: # Si ya no existe ningún numero negativo, se genera la tabla final.
+            elif self.operation == 'min' and np.any(simplex_table[0][:-1] > 0):
+                done = False
+            else:
                 done = True                                
 
                 # Matriz con los valores de la tabla final.
@@ -312,7 +316,7 @@ class Simplex:
                 )
                 self.lastTable = lastTable
 
-                # Genera la solución del problema de maximizacion.
+                # Genera la solución del problema.
                 self.solution =  self.format_solution(lastTable['rColumn'])                
 
         return simplex_table
