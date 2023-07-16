@@ -14,9 +14,7 @@ def solve(request):
         for i in range(1, int(totalVariables)+1):
             coeffName = f"funCoeff{i}"
             coefficient = request.GET.get(coeffName)
-            objFunCoeffs.append(coefficient)     
-        
-        print(objFunCoeffs)
+            objFunCoeffs.append(coefficient)
 
         for i in range(1, int(totalConstraints)+1):
             constraint = []
@@ -31,8 +29,6 @@ def solve(request):
             constraint.append(constSelectEq)
             constraint.append(constEqTo)
             allConstraints.append(constraint.copy())
-        
-        print(allConstraints)
 
         run = Simplex(
             operation, 

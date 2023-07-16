@@ -23,6 +23,7 @@ class Simplex:
         self.operation = operation        
         self.nVar = nVar
         self.nRes = nRes
+        self.allTables = []
         self.model(objFun, constraints)
         self.solve()
 
@@ -67,7 +68,7 @@ class Simplex:
 
     def solve(self):
         try:
-            final_table = self.simplex_method(self.objFun, self.constraints)
+            self.simplex_method(self.objFun, self.constraints)
         except ZeroDivisionError:
             print("Error: Division by zero occurred.")
 
