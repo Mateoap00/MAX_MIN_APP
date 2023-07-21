@@ -241,8 +241,9 @@ class Simplex:
             pivot_row = -1
             min_ratio = float('inf')
             for i in range(1, num_constraints + 1):
-                # Operaciones entre filas para convertir números en columna pivote a 0.
+                # Encuentra el resultado positivo mas pequeño de la division entre los valores de la columna R y la columna pivote.
                 if simplex_table[i][pivot_column] > 0:
+                    # Columna R / columna pivote.
                     ratio = simplex_table[i][-1] / simplex_table[i][pivot_column]
                     if ratio < min_ratio and ratio > 0:
                         min_ratio = ratio
@@ -283,6 +284,7 @@ class Simplex:
             )
             self.allTables.append(newTable)
 
+            # Operaciones entre filas para convertir números en columna pivote a 0.
             for i in range(num_constraints + 1):
                 if i != pivot_row:
                     factor = simplex_table[i][pivot_column]
