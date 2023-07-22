@@ -1,29 +1,27 @@
 {% extends 'maxMinApp/index.html' %}
 {% block styles %}
 <style>
+    a.nav-link {
+        color: #0f0;
+    }
 
-a.nav-link {
-    color: #0f0;
-}
-
-.navbar-text {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    color: #f8f9fa;
-}
+    .navbar-text {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        color: #f8f9fa;
+    }
 
     /* Estilos para dividir la página en dos columnas */
     .container {
         display: flex;
         justify-content: space-between;
     }
+
     .form-section {
-    flex: 1;
-    padding: 20px;
-    display: contents;
-}
-
-
+        flex: 1;
+        padding: 20px;
+        display: contents;
+    }
 
     .tables-section {
         flex: 1;
@@ -31,74 +29,58 @@ a.nav-link {
     }
 
     .form-section-2 {
-    flex: 1;
-    margin-left: -50% !important;
-    margin-top: 20rem !important;
-}
+        flex: 1;
+        margin-left: -50% !important;
+        margin-top: 20rem !important;
+    }
 
-.form-section-3 {
-    flex: 1;
-    margin-left: 6% !important;
-    margin-top: -3%!important;
-}
+    .form-section-3 {
+        flex: 1;
+        margin-left: 6% !important;
+        margin-top: -3% !important;
+    }
 
-form.form-horizontal {
-    display: block;
-    width: 202%;
-}
+    form.form-horizontal {
+        display: block;
+        width: 202%;
+    }
 
-.titulo {
-    display: block;
-    margin: auto;
-    margin-left: 5.8rem !important;
-    padding-top: 3rem !important;
-}
+    .titulo {
+        display: block;
+        margin: auto;
+        margin-left: 5.8rem !important;
+        padding-top: 3rem !important;
+    }
 
-.col-sm-6 {
-    flex: 0 0 auto;
-    width: 50% !important;
-}
+    .col-sm-6 {
+        flex: 0 0 auto;
+        width: 50% !important;
+    }
 
-.col-sm-7 {
-    flex: 0 0 auto;
-    width: 106% !important;
-}
+    .col-sm-7 {
+        flex: 0 0 auto;
+        width: 106% !important;
+    }
 
+    .scrollable-div {
+        width: 100%;
+        height: 80%;
+        overflow: auto;
+        padding: 1rem;
+    }
 
+    /* Opcional: Agregar estilo al contenido interno */
+    .scrollable-div p {
+        margin: 10px;
+    }
 
-.scrollable-div {
-    width: 100%;
-    height: 80%;
-    overflow: auto;
-    padding: 1rem;
-}
-
-/* Opcional: Agregar estilo al contenido interno */
-.scrollable-div p {
-  margin: 10px;
-}
-
-
-
-/* rgb fondo*/
-
-
-body {
-  margin: 0;
-  padding: 0;
-  background: url('/static/imgs/fondoApp.png') no-repeat center center fixed;
-  background-size: cover;
-}
-
-
-
-
-
-
-
-
-
-
+    /* rgb fondo*/
+    body {
+        margin: 0;
+        padding: 0;
+        background: url('/static/imgs/fondoApp.png') no-repeat center center fixed;
+        background-size: cover;
+    }
 </style>
 {% endblock %}
 {% block title %}Modelado{% endblock %}
@@ -111,276 +93,275 @@ body {
 <div class="container">
     <div class="form-section">
         <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-            
-                <form action="{% url 'model' %}" method="post" class="formulario">
-                    {% csrf_token %}
-                    <h3 class="row mt-3 mb-3 justify-content-center">Calculadora Simplex</h3>
-                    <select class="form-select mb-3" aria-label="Default select example" id="operation" name="operation">
-                        <option selected value="max">Maximizar</option>
-                        <option value="min">Minimizar</option>
-                    </select>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label for="variables" class="form-label">Numero de variables</label>
-                            <input type="number" class="form-control" id="variables" name="variables" required min="2"
-                                placeholder="2">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{% url 'model' %}" method="get" class="formulario">
+                        {% csrf_token %}
+                        <input type="hidden" name="getType" value="model">
+                        <h3 class="row mt-3 mb-3 justify-content-center">Calculadora Simplex</h3>
+                        <select class="form-select mb-3" aria-label="Default select example" id="operation"
+                            name="operation">
+                            <option selected value="max">Maximizar</option>
+                            <option value="min">Minimizar</option>
+                        </select>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label for="variables" class="form-label">Numero de variables</label>
+                                <input type="number" class="form-control" id="variables" name="variables" required
+                                    min="2" placeholder="2">
+                            </div>
+                            <div class="col-6">
+                                <label for="restrictions" class="form-label">Numero de restricciones</label>
+                                <input type="number" class="form-control" id="restrictions" name="restrictions" required
+                                    min="2" placeholder="2">
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label for="restrictions" class="form-label">Numero de restricciones</label>
-                            <input type="number" class="form-control" id="restrictions" name="restrictions" required min="2"
-                                placeholder="2">
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary" id="generateModelBtn"
+                                name="generateModelBtn">Generar</button>
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary" id="generateModelBtn"
-                            name="generateModelBtn">Generar</button>
-                    </div>
-                </form>
-            
-
-    </div>
-    </div>
-    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     {% endif %}
-   
+
     {% if showModel %}
 
-    
     <div class="form-section-2">
         <div class="col-sm-7">
             <div class="card">
-              <div class="card-body">
-                <div class="scrollable-div">
-                <form action="{% url 'solve' %}" method="get" class="form-horizontal">
-                    <input type="hidden" class="form-control" name="variables" value="{{ variables.value }}">
-                    <input type="hidden" class="form-control" name="restrictions" value="{{ restrictions.value }}">
-                    <input type="hidden" class="form-control" name="operation" value="{{ operation }}">
-                    <div class=" row mb-3" name="objFunDefinition">
-                        {% if operation == 'max' %}
-                        <h4>Maximizar Z</h4>
-                        {% else %}
-                        <h4>Minimizar Z</h4>
-                        {% endif%}
-
-                        {% for var in variables.range %}
-                        {% if var == variables.value %}
-                        <div class="col-auto col-md-2 col-xl-1">
-                            <input type="number" class="form-control" placeholder="0" value="0" name="funCoeff{{ var }}">
-                        </div>
-                        <div class="col-12 col-md-2 col-xl-1">
-                            <label class="form-label">X{{var}} </label>
-                        </div>
-                        {% else %}
-                        <div class="col-auto col-md-2 col-xl-1">
-                            <input type="number" class="form-control" placeholder="0" value="0" name="funCoeff{{ var }}">
-                        </div>
-                        <div class="col-auto col-md-2 col-xl-1">
-                            <label class="form-label">X{{var}} +</label>
-                        </div>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-
-                    <h4>Restricciones</h4>
-                    {% for cons in restrictions.range %}
-                    <div class="row mb-3" name="constDefinition">
-                        <h5>Restricción #{{cons}}:</h3>
-                            {% for var in variables.range %}
-                            {% if var == variables.value %}
-                            <div class="col-auto col-md-2 col-xl-1">
-                                <input type="number" class="form-control" placeholder="0" value="0"
-                                    name="constCoeff({{ cons }},{{ var }})">
-                            </div>
-                            <div class="col-12 col-md-2 col-xl-1">
-                                <label class="form-label">X{{var}}</label>
-                            </div>
-                            {% else %}
-                            <div class="col-auto col-md-2 col-xl-1">
-                                <input type="number" class="form-control" placeholder="0" value="0"
-                                    name="constCoeff({{ cons }},{{ var }})">
-                            </div>
-                            <div class="col-auto col-md-2 col-xl-1">
-                                <label class="form-label">X{{var}} +</label>
-                            </div>
-                            {% endif %}
-                            {% endfor %}
-                            <div class="col-auto col-md-2 col-xl-1">
-                                <select class="form-select resEqSign" aria-label="Default select example"
-                                    name="constSelectEq{{ cons }}">
-                                    <option selected value="<=">&le;</option>
-                                    <option value=">=">&ge;</option>
-                                </select>
-                            </div>
-                            <div class="col-auto col-md-2 col-xl-1">
-                                <input type="number" class="col-sm form-control" required placeholder="0" value="0"
-                                    name="constEqTo{{ cons }}">
-                            </div>
-                    </div>
-                    {% endfor %}
-                  
-                    <div class="titulo-2">
-                        <h5 style="color: white">ACCIONES</h5>
-                    </div>
-
-                                <button type="submit" class="btn btn-primary" id="resolveModelBtn"
-                                    name="resolveModelBtn">Resolver</button>
-                                    <button type="submit" class="btn btn-primary" id="limpiarTabla"
-                                    name="limpiarTabla">Nuevo</button>
-                    <br><br><br>
-                </form>
-             </div>
-            </div>
-        </div>
-    </div>
-             
-    </div>
-
-    <div class="form-section-3">
-    <h4 style="color: white">RESULTADO</h4>
-
-
-        <div class="col-sm-8">
-          <div class="card">
-            <div class="card-body">
-                {% if user.is_authenticated%}
-                {% load customFilters %}
-                <div class="mt-3 mb-3 col-6 col-md-12 mx-auto">
-                    {% if operation == 'max' %}
-                    <h2>Maximizar</h2>
-                    {% else %}
-                    {% if operation == 'min' %}
-                    <h2>Minimizar</h2>
-                    {% endif %}
-                    {% endif %}
-                    <h2>Función Objetivo:</h2>
-                    <h3>Z = {{ model.objFun }}</h3>
-                    <h2>Restricciones:</h2>
-                    <ol>
-                        {% for const in model.constraints %}
-                        <li>{{ const }}</li>
-                        {% endfor %}
-                    </ol>
-                    <h3>Tabla Inicial</h3>
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">{{ firstTable.tableName }}</th>
-                                {% for colName in firstTable.colsNames %}
-                                <th scope="col">{{ colName }}</th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% for row in firstTable.table %}
-                            <tr>
-                                <th scope="row">{{ row }}</th>
-                                {% for value in firstTable.table|get_dict_value:row %}
-                                <td>{{ value }}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <h3>Método Simplex</h3>
-                    {% for tbl in allTables %}
-                    <h4>Tabla {{tbl.tableName}}</h4>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">{{ tbl.tableName }}</th>
-                                {% for colName in tbl.colsNames %}
-                                {% if forloop.counter0 == tbl.pivotCol.colNum%}
-                                <th scope="col" class="table-primary">{{ colName }}</th>
+                <div class="card-body">
+                    <div class="scrollable-div">
+                        <form action="{% url 'model' %}" method="get" class="form-horizontal">
+                            <input type="hidden" name="getType" value="results">
+                            <input type="hidden" class="form-control" name="variables" value="{{ variables.value }}">
+                            <input type="hidden" class="form-control" name="restrictions"
+                                value="{{ restrictions.value }}">
+                            <input type="hidden" class="form-control" name="operation" value="{{ operation }}">
+                            <div class=" row mb-3" name="objFunDefinition">
+                                {% if operation == 'max' %}
+                                <h4>Maximizar Z</h4>
                                 {% else %}
-                                <th scope="col">{{ colName }}</th>
+                                <h4>Minimizar Z</h4>
                                 {% endif%}
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% for row in tbl.table %}
-                            {% if forloop.counter0 == tbl.pivotRow.rowNum%}
-                            <tr class="table-info">
-                                <th scope="row">{{ row }}</th>
-                                {% for value in tbl.table|get_dict_value:row %}
-                                {% if forloop.counter0 == tbl.pivotCol.colNum%}
-                                <td class="table-primary">{{ value }}</td>
+
+                                {% for var in variables.range %}
+                                {% if var == variables.value %}
+                                <div class="col-auto col-md-2 col-xl-1">
+                                    <input type="number" class="form-control" placeholder="0" value="0"
+                                        name="funCoeff{{ var }}">
+                                </div>
+                                <div class="col-12 col-md-2 col-xl-1">
+                                    <label class="form-label">X{{var}} </label>
+                                </div>
                                 {% else %}
-                                <td>{{ value }}</td>
-                                {% endif%}
+                                <div class="col-auto col-md-2 col-xl-1">
+                                    <input type="number" class="form-control" placeholder="0" value="0"
+                                        name="funCoeff{{ var }}">
+                                </div>
+                                <div class="col-auto col-md-2 col-xl-1">
+                                    <label class="form-label">X{{var}} +</label>
+                                </div>
+                                {% endif %}
                                 {% endfor %}
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <th scope="row">{{ row }}</th>
-                                {% for value in tbl.table|get_dict_value:row %}
-                                {% if forloop.counter0 == tbl.pivotCol.colNum%}
-                                <td class="table-primary">{{ value }}</td>
-                                {% else %}
-                                <td>{{ value }}</td>
-                                {% endif%}
-                                {% endfor %}
-                            </tr>
-                            {% endif%}
+                            </div>
+
+                            <h4>Restricciones</h4>
+                            {% for cons in restrictions.range %}
+                            <div class="row mb-3" name="constDefinition">
+                                <h5>Restricción #{{cons}}:</h3>
+                                    {% for var in variables.range %}
+                                    {% if var == variables.value %}
+                                    <div class="col-auto col-md-2 col-xl-1">
+                                        <input type="number" class="form-control" placeholder="0" value="0"
+                                            name="constCoeff({{ cons }},{{ var }})">
+                                    </div>
+                                    <div class="col-12 col-md-2 col-xl-1">
+                                        <label class="form-label">X{{var}}</label>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-auto col-md-2 col-xl-1">
+                                        <input type="number" class="form-control" placeholder="0" value="0"
+                                            name="constCoeff({{ cons }},{{ var }})">
+                                    </div>
+                                    <div class="col-auto col-md-2 col-xl-1">
+                                        <label class="form-label">X{{var}} +</label>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <div class="col-auto col-md-2 col-xl-1">
+                                        <select class="form-select resEqSign" aria-label="Default select example"
+                                            name="constSelectEq{{ cons }}">
+                                            <option selected value="<=">&le;</option>
+                                            <option value=">=">&ge;</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto col-md-2 col-xl-1">
+                                        <input type="number" class="col-sm form-control" required placeholder="0"
+                                            value="0" name="constEqTo{{ cons }}">
+                                    </div>
+                            </div>
                             {% endfor %}
-                        </tbody>
-                    </table>
-                    <ul>
-                        <li><strong>Columna pivote: </strong>{{tbl.pivotCol.colName}}</li>
-                        <li><strong>Fila pivote: </strong>{{tbl.pivotRow.rowName}}</li>
-                        <li><strong>Numero pivote: </strong>{{tbl.pivotValue}}</li>
-                        <li><strong>Fila entrante para siguiente tabla: </strong>{{tbl.enteringRow.rowName}} =
-                            {{tbl.enteringRow.entireRow}}</li>
-                            
-                    </ul>
-                    {% endfor %}
-            
-                    <h3>Tabla Final</h3>
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">{{ lastTable.tableName }}</th>
-                                {% for colName in lastTable.colsNames %}
-                                <th scope="col">{{ colName }}</th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% for row in lastTable.table %}
-                            <tr>
-                                <th scope="row">{{ row }}</th>
-                                {% for value in lastTable.table|get_dict_value:row %}
-                                <td>{{ value }}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-            
-                    <h3>Solución:</h3>
-                    <ul>
-                        {% for sol in solution %}
-                        <li>
-                            <p>{{sol}} = {{solution|get_dict_value:sol}}</p>
-                        </li>
-                        {% endfor%}
-                    </ul>
+
+                            <div class="titulo-2">
+                                <h5 style="color: white">ACCIONES</h5>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="resolveModelBtn"
+                                name="resolveModelBtn">Resolver</button>
+                            <button type="submit" class="btn btn-primary" id="limpiarTabla"
+                                name="limpiarTabla">Nuevo</button>
+                            <br><br><br>
+                        </form>
+                    </div>
                 </div>
-                {% endif %}
-            
             </div>
-            </div>
-          </div>
         </div>
-  
 
+    </div>
 
+    {% if showResults %}
+    <div class="form-section-3">
+        <h4 style="color: white">RESULTADO</h4>
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="scrollable-div">
+                    {% if user.is_authenticated%}
+                    {% load customFilters %}
+                    <div class="mt-3 mb-3 col-6 col-md-12 mx-auto">
+                        {% if operation == 'max' %}
+                        <h2>Maximizar</h2>
+                        {% else %}
+                        {% if operation == 'min' %}
+                        <h2>Minimizar</h2>
+                        {% endif %}
+                        {% endif %}
+                        <h2>Función Objetivo:</h2>
+                        <h3>Z = {{ model.objFun }}</h3>
+                        <h2>Restricciones:</h2>
+                        <ol>
+                            {% for const in model.constraints %}
+                            <li>{{ const }}</li>
+                            {% endfor %}
+                        </ol>
+                        <h3>Tabla Inicial</h3>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ firstTable.tableName }}</th>
+                                    {% for colName in firstTable.colsNames %}
+                                    <th scope="col">{{ colName }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for row in firstTable.table %}
+                                <tr>
+                                    <th scope="row">{{ row }}</th>
+                                    {% for value in firstTable.table|get_dict_value:row %}
+                                    <td>{{ value }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <h3>Método Simplex</h3>
+                        {% for tbl in allTables %}
+                        <h4>Tabla {{tbl.tableName}}</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ tbl.tableName }}</th>
+                                    {% for colName in tbl.colsNames %}
+                                    {% if forloop.counter0 == tbl.pivotCol.colNum%}
+                                    <th scope="col" class="table-primary">{{ colName }}</th>
+                                    {% else %}
+                                    <th scope="col">{{ colName }}</th>
+                                    {% endif%}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for row in tbl.table %}
+                                {% if forloop.counter0 == tbl.pivotRow.rowNum%}
+                                <tr class="table-info">
+                                    <th scope="row">{{ row }}</th>
+                                    {% for value in tbl.table|get_dict_value:row %}
+                                    {% if forloop.counter0 == tbl.pivotCol.colNum%}
+                                    <td class="table-primary">{{ value }}</td>
+                                    {% else %}
+                                    <td>{{ value }}</td>
+                                    {% endif%}
+                                    {% endfor %}
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <th scope="row">{{ row }}</th>
+                                    {% for value in tbl.table|get_dict_value:row %}
+                                    {% if forloop.counter0 == tbl.pivotCol.colNum%}
+                                    <td class="table-primary">{{ value }}</td>
+                                    {% else %}
+                                    <td>{{ value }}</td>
+                                    {% endif%}
+                                    {% endfor %}
+                                </tr>
+                                {% endif%}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <ul>
+                            <li><strong>Columna pivote: </strong>{{tbl.pivotCol.colName}}</li>
+                            <li><strong>Fila pivote: </strong>{{tbl.pivotRow.rowName}}</li>
+                            <li><strong>Numero pivote: </strong>{{tbl.pivotValue}}</li>
+                            <li><strong>Fila entrante para siguiente tabla: </strong>{{tbl.enteringRow.rowName}} =
+                                {{tbl.enteringRow.entireRow}}</li>
+                        </ul>
+                        {% endfor %}
 
-          
+                        <h3>Tabla Final</h3>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ lastTable.tableName }}</th>
+                                    {% for colName in lastTable.colsNames %}
+                                    <th scope="col">{{ colName }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for row in lastTable.table %}
+                                <tr>
+                                    <th scope="row">{{ row }}</th>
+                                    {% for value in lastTable.table|get_dict_value:row %}
+                                    <td>{{ value }}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <h3>Solución:</h3>
+                        <ul>
+                            {% for sol in solution %}
+                            <li>
+                                <p>{{sol}} = {{solution|get_dict_value:sol}}</p>
+                            </li>
+                            {% endfor%}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {% endif %}
 </div>
 
