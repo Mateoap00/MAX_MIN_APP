@@ -67,8 +67,8 @@ def model(request):
                 'firstTable': run.firstTable,
                 'lastTable': run.lastTable,
                 'solution': run.solution,
-                'showResults': True,
-                'showModel': True
+                'solved': run.solved,
+                'showResults': True
             }
             return render(request, 'model/model.html', context)
         else:

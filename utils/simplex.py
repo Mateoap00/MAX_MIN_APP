@@ -12,6 +12,7 @@ class Simplex:
     lastTable = {}
     allTables = []
     solution = {}
+    solved = False
 
     # operation para definir que se va a resolver, ejercicio de maximizacion 'max' o minimizacion 'min'.
     # nRes, nVar son el numero de restricciones y variables del problema.
@@ -320,7 +321,8 @@ class Simplex:
                 self.lastTable = lastTable
 
                 # Genera la solución del problema.
-                self.solution =  self.format_solution(lastTable['rColumn'])                
+                self.solution =  self.format_solution(lastTable['rColumn'])
+                self.solved = True                
 
         return simplex_table
 

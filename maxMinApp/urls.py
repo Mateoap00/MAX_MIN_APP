@@ -17,21 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.shortcuts import render, redirect
-
-def home(request):
-    if request.method == 'GET':
-        if request.user.is_authenticated:
-            print("Logged in")
-            return redirect('model')
-        else:
-            print("Not logged in")
-            return redirect('login')
-    
+from . import views    
 
 urlpatterns = [
-    path('', home, name='index'),
+    path('', views.index, name='index'),
+    path('404/', views.custom404NotFound, name='404NotFound'),
     path('users/', include('users.urls')),
     path('model/', include('model.urls')),
     path('solve/', include('solve.urls')),
+    path('results/', include('results.urls')),
     path('admin/', admin.site.urls),
 ]

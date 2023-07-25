@@ -10,7 +10,6 @@ def loginUser(request):
         if user is not None:
             login(request, user)
             print('Login succeed!')
-            # login(request, user)
             return redirect('model')
         else:
             print('Login failed with wrong credentials!')
