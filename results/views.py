@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .models import Result
 import json
 
@@ -21,13 +22,15 @@ def getResults(request):
                     'solution': json.loads(solution).copy(),
                     'resultDate': resultDate
                 }
-                allResults.append(result)
-            print('ALLRESULTS:', allResults)     
+                allResults.append(result)     
             context = {
                 'allResults': allResults.copy()        
             }
+            messages.success(request, 'Resultados cargados con éxito.')
             return render(request, 'results/results.html', context)
         else:
+            msg = f"Error: El usuario {user.username} no ha registrado resultados."
+            messages.error(request, msg)
             context = {
                 'info': 'Resultados'
             }

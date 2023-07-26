@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 from utils.simplex import Simplex
 
 def model(request):
@@ -60,6 +61,11 @@ def model(request):
             print('Model: ', run.modelString)
             print('Optimal Solution: ', run.solution)
 
+            if run.solved == True:
+                messages.success(request, 'Problema optimizado y solución encontrada.')
+            else:        
+                messages.error(request, 'Error: El Problema no pudo ser resulto, posibles soluciones infinitas.')
+
             context = {
                 'operation': run.operation,
                 'model': run.modelString,
@@ -68,6 +74,15 @@ def model(request):
                 'lastTable': run.lastTable,
                 'solution': run.solution,
                 'solved': run.solved,
+                'variables': {
+                    'value': int(totalVariables),
+                    'range': range(1, int(totalVariables)+1)
+                },
+                'restrictions': {
+                    'value': int(totalConstraints),
+                    'range': range(1, int(totalConstraints)+1)
+                },
+                'showModel': True,
                 'showResults': True
             }
             return render(request, 'model/model.html', context)

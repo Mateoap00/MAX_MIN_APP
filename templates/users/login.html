@@ -2,17 +2,17 @@
 {% load static %}
 {% block styles %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
     * {
         color: white;
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Quicksand', sans-serif;
     }
 
     body {
+        font-family: 'Share Tech Mono', monospace;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -196,7 +196,8 @@
 {% block title %}Login{% endblock %}
 {% block content %}
 
-<section> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+<section> 
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
     <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
     <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
     <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
@@ -230,12 +231,10 @@
     <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
     <span></span> <span></span> <span></span> <span></span> <span></span>
 
-    <div class="signin">
-
+    <div class="signin">        
         <div class="content">
-
+            {% include 'maxMinApp/messages.html' %}
             <h2 style="text-align: center;">Calculadora Método Simplex</h2>
-
             <form method="post">
                 {% csrf_token %}
                 <div class="inputBox">
@@ -254,4 +253,5 @@
         </div>
     </div>
 </section>
+
 {% endblock %}

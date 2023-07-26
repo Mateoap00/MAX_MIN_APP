@@ -1,55 +1,206 @@
 {% extends 'maxMinApp/index.html' %}
 {% block styles %}
 <style>
+    h2{
+        color: #f8f9fa;
+    }
 
+    td {
+        text-align: center;
+        color: #f8f9fa;
+    }
+
+    th {
+        text-align: center;
+        background-color: #f8f9fa;
+        color: #0f0;
+    }
+
+    tr {
+        background-color: #333;
+    }
+
+    tr:hover {
+        background-color: #222;
+    }
+
+    a.btn{
+        background-color: #0f0;
+    }
+
+    a.btn:hover{
+        background-color: rgb(19, 128, 19)
+    }
+
+    section {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2px;
+        flex-wrap: wrap;
+        overflow: hidden;
+    }
+
+    section::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(#000, #0f0, #000);
+        animation: animate 5s linear infinite;
+    }
+
+    @keyframes animate {
+        0% {
+            transform: translateY(-100%);
+        }
+
+        100% {
+            transform: translateY(100%);
+        }
+    }
+
+    section span {
+        position: relative;
+        display: block;
+        width: calc(6.25vw - 2px);
+        height: calc(6.25vw - 2px);
+        background: #181818;
+        z-index: 0;
+        transition: 1.5s;
+    }
+
+    section span:hover {
+        background: #0f0;
+        transition: 0s;
+    }
+
+    section .signin {
+        position: absolute;
+        width:auto;
+        background: #222;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        border-radius: 4px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 9);
+    }
+
+    section .signin .content {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    @media (max-width: 900px) {
+        section span {
+            width: calc(10vw - 2px);
+            height: calc(10vw - 2px);
+        }
+    }
+
+    @media (max-width: 600px) {
+        section span {
+            width: calc(20vw - 2px);
+            height: calc(20vw - 2px);
+        }
+    }
 </style>
 {% endblock %}
 {% load customFilters %}
 {% block title %}Resultados{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
 
-<h2>Resultados Guardados por {{user.username}}</h2>
+<section>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span> <span></span>
+    <span></span> <span></span> <span></span> <span></span> <span></span>
 
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th scope="col">Resultado</th>
-            <th scope="col">Función Objetivo</th>
-            <th scope="col">Operación</th>
-            <th scope="col">Restricciones</th>
-            <th scope="col">Solución</th>
-            <th scope="col">Fecha Guardada</th>
-        </tr>
-    </thead>
-    <tbody class="table-group-divider">
-        {% for result in allResults %}
-        <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>Z = {{result.objFunction}}</td>
-            <td>{{result.operation}}</td>
-            <td>
-                <ul>
-                    {% for cons in result.constraints %}
-                    <li>R{{forloop.counter}}: {{cons}}</li>
+    <div class="signin">
+        <div class="content">
+            {% include 'maxMinApp/messages.html' %}
+            <h2>Resultados Guardados por {{user.username}}</h2>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Resultado</th>
+                        <th scope="col">Función Objetivo</th>
+                        <th scope="col">Operación</th>
+                        <th scope="col">Restricciones</th>
+                        <th scope="col">Solución</th>
+                        <th scope="col">Fecha Guardada</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for result in allResults %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Z = {{result.objFunction}}</td>
+                        <td>{{result.operation}}</td>
+                        <td>
+                            <ul>
+                                {% for cons in result.constraints %}
+                                <li>R{{forloop.counter}}: {{cons}}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                {% for sol in result.solution %}
+                                <li>
+                                    {{sol}} = {{result.solution|get_dict_value:sol}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{result.resultDate}}</td>
+                    </tr>
                     {% endfor %}
-                </ul>
-            </td>
-            <td>
-                <ul>
-                    {% for sol in result.solution %}
-                    <li>
-                        {{sol}} = {{result.solution|get_dict_value:sol}}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </td>
-            <td>{{result.resultDate}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<a href="/model/" class="btn btn-success">Regresar</a>
-{% endif %}
+                </tbody>
+            </table>
+            <a href="/model/" class="btn">Regresar</a>
+        </div>
+    </div>
+</section>
 {% endblock %}

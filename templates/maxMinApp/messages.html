@@ -1,0 +1,89 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    body {
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+    /*.alert.alert-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 10px;
+        margin-bottom: 10px;
+    }*/
+
+    .alert.alert-success {
+        width: fit-content;
+        background-color: #2dc653;
+        color: #000;
+        border: 1px solid #2dc653;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* Warning message style */
+    .alert.alert-warning {
+        width: fit-content;
+        background-color: #fad643;
+        color: #000;
+        border: 1px solid #fad643;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* Error message style */
+    .alert.alert-error {
+        width: fit-content;
+        background-color: #da344d;
+        color: #000;
+        border: 1px solid #da344d;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+{% if messages %}
+
+{% for message in messages %}
+{% if message.tags == 'success' %}
+<div class="messages">
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+</div>
+{% endif %}
+{% if message.tags == 'error' %}
+<div class="messages">
+    <div class="alert alert-error">
+        {{ message }}
+    </div>
+</div>
+{% endif %}
+{% if message.tags == 'warning' %}
+<div class="messages">
+    <div class="alert alert-warning">
+        {{ message }}
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+<script>
+    var messages = document.getElementsByClassName('messages');
+
+    Array.from(messages).forEach((message) => {
+        const duration = 5000;
+
+        message.style.display = 'block';
+
+        setTimeout(function () {
+            message.style.display = 'none';
+        }, duration);
+    });
+</script>
+
+{% endif %}

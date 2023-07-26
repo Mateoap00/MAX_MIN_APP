@@ -12,22 +12,45 @@
         </script>
     <title>404</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
         body {
+            font-family: 'Share Tech Mono', monospace;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #f8f9fa;
+            background-color: #222;
+        }
+
+        h1, p, a{
+            color: #f8f9fa;
+        }
+
+        a.btn{
+            background-color: #0f0;
+        }
+    
+        a.btn:hover{
+            background-color: rgb(19, 128, 19)
+        }
+
+        .outer-div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
 
 <body>
-    <div class="container text-center">
+    <div class="container text-center outer-div">
+        {% include 'maxMinApp/messages.html' %}
         <img src="/static/imgs/404-error.png" alt="Page Not Found">
         <h1 class="mt-3"> <strong>{{info}}</strong> no encontrado</h1>
         <p>La pagina de <strong>{{info}}</strong> no existe.</p>
-        <a href="/" class="btn btn-success">Regresar</a>
+        <a href="/" class="btn">Regresar</a>
     </div>
 </body>
 

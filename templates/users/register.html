@@ -2,21 +2,21 @@
 {% load static %}
 {% block styles %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
     .register-body {
+        font-family: 'Share Tech Mono', monospace;
         margin: 0;
         padding: 0;
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        font-family: 'Jost', sans-serif;
         background-image: url("{% static 'imgs/register.png' %}");
     }
 
     .main {
-        width: 350px;
+        width: 400px;
         height: 500px;
         background: red;
         overflow: hidden;
@@ -111,10 +111,11 @@
 {% block content %}
 <div class="register-body">
     <div class="main">
+        {% include 'maxMinApp/messages.html' %}
         <input type="checkbox" id="chk" aria-hidden="true">
-        <div class="signup">
+        <div class="signup">            
             <form action="{% url 'register' %}" method="post">
-                {% csrf_token %}
+                {% csrf_token %}                
                 <label for="chk" aria-hidden="true">Registro</label>
                 <input type="text" name="username" required placeholder="Usuario">
                 <input type="email" name="email" required placeholder="Correo">
@@ -126,7 +127,7 @@
 
         <div class="login">
             <form action="{% url 'login' %}" method="get">
-                <label for="chk" aria-hidden="true">Inicia Sesión</label>
+                <label for="chk" aria-hidden="true">Iniciar Sesión</label>
                 <button type="submit">Iniciar Sesión</button>
             </form>
         </div>
