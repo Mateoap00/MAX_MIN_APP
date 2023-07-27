@@ -40,7 +40,7 @@
         font-size: 2.3em;
         justify-content: center;
         display: flex;
-        margin: 60px;
+        margin: 50px;
         font-weight: bold;
         cursor: pointer;
         transition: .5s ease-in-out;
@@ -59,9 +59,9 @@
         border-radius: 5px;
     }
 
-    button {
-        width: 60%;
-        height: 40px;
+    a.btn {
+        width: 10rem;
+        height: 2.5rem;
         margin: 10px auto;
         justify-content: center;
         display: block;
@@ -77,12 +77,30 @@
         cursor: pointer;
     }
 
-    button:hover {
+    a.btn:hover {
         background: rgb(19, 128, 19);
+        color: #f8f9fa;
+    }
+
+    button.btn.btnRegister {
+        width: 8rem;
+        height: 3rem;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        background-color: #0f0;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #000;
+    }
+
+    button.btn.btnRegister:hover {
+        background-color: rgb(19, 128, 19);
+        font-weight: bold;
+        color: #f8f9fa;
     }
 
     .login {
-        height: 460px;
+        height: 300px;
         background: rgb(255, 255, 255);
         border-radius: 60% / 10%;
         transform: translateY(-180px);
@@ -90,12 +108,13 @@
     }
 
     .login label {
+        font-weight: bold;
         color: #222;
         transform: scale(.6);
     }
 
     #chk:checked~.login {
-        transform: translateY(-500px);
+        transform: translateY(-275px);
     }
 
     #chk:checked~.login label {
@@ -111,25 +130,29 @@
 {% block content %}
 <div class="register-body">
     <div class="main">
-        {% include 'maxMinApp/messages.html' %}
         <input type="checkbox" id="chk" aria-hidden="true">
-        <div class="signup">            
+        <div class="signup">
             <form action="{% url 'register' %}" method="post">
-                {% csrf_token %}                
+                {% csrf_token %}
                 <label for="chk" aria-hidden="true">Registro</label>
-                <input type="text" name="username" required placeholder="Usuario">
-                <input type="email" name="email" required placeholder="Correo">
-                <input type="password" name="password1" required placeholder="Contraseña">
-                <input type="password" name="password2" required placeholder="Repita la contraseña">
-                <button type="submit">Registrar</button>
+                {% include 'maxMinApp/messages.html' %}
+                <input type="text" name="username" class="mb-3" required placeholder="Usuario">
+                <input type="email" name="email" class="mb-3" required placeholder="Correo">
+                <input type="password" name="password1" class="mb-3" required placeholder="Contraseña">
+                <input type="password" name="password2" class="mb-3" required placeholder="Repita la contraseña">
+                <div class="mb-5 d-flex justify-content-center">
+                    <button type="submit" class="btn btnRegister">REGISTRAR</button>
+                </div>
             </form>
         </div>
 
+        <div class="mb-5">
+            <p>a</p>
+        </div>
+
         <div class="login">
-            <form action="{% url 'login' %}" method="get">
-                <label for="chk" aria-hidden="true">Iniciar Sesión</label>
-                <button type="submit">Iniciar Sesión</button>
-            </form>
+            <label for="chk" aria-hidden="true">Iniciar Sesión</label>
+            <a href="/users/login" class="btn btnLogin">INICIAR SESIÓN</a>
         </div>
     </div>
 </div>

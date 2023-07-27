@@ -13,13 +13,20 @@ def loginUser(request):
             login(request, user)
             msg = f"Hola {user.username}! Inicio de sesión exitoso."
             messages.success(request, msg)
+            context = {
+                'showMain': True,
+                'showMainMessage': True
+            }
             print('Login succeed!')
-            return redirect('model')
+            return render(request, 'model/model.html', context)
         else:
             messages.error(request, 'Error: Nombre de usuario o contraseña incorrectas.')
             return redirect('login')
-    else:
-        return render(request, 'users/login.html', {})
+    elif request.method == 'GET':
+        if request.user.is_authenticated:
+            return redirect('model')
+        else:
+            return render(request, 'users/login.html', {})
     
 def registerUser(request):
     if request.method == 'POST':
@@ -38,17 +45,20 @@ def registerUser(request):
                     messages.error(request, 'Error: No se pudo registrar el nuevo usuario.')
                     return redirect('register')
             except IntegrityError:
-                msg = f"Error: Usuario con el nombre '{username}' y email '{email}' ya se encuentra registrado."
+                msg = f"Error: Usuario con el nombre '{username}' o email '{email}' ya se encuentra registrado."
                 messages.error(request, msg)
                 return redirect('register')            
         else:
             messages.error(request, 'Error: Las contraseñas ingresadas no son iguales.')
             return redirect('register')
-    else:
-        return render(request, 'users/register.html', {})
+    elif request.method == 'GET':
+        if request.user.is_authenticated:
+            return redirect('model')
+        else:
+            return render(request, 'users/register.html', {})
     
 def logoutUser(request):
     if request.method == 'GET':
         logout(request)
-        print('Logout succeed!')
-        return redirect('index')
+        messages.success(request, 'Sesión finalizada con éxito.')
+        return redirect('login')

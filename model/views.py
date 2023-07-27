@@ -5,12 +5,12 @@ from utils.simplex import Simplex
 def model(request):
     if request.method == 'GET':
         getType = request.GET.get('getType')
-        print('getType: ', getType)
         if getType == 'model':
             restrictions = request.GET.get('restrictions')
             variables = request.GET.get('variables')
             operation = request.GET.get('operation')
             context = {
+                'showMain': True,
                 'showModel': True,
                 'operation': operation,
                 'restrictions': {
@@ -64,9 +64,12 @@ def model(request):
             if run.solved == True:
                 messages.success(request, 'Problema optimizado y solución encontrada.')
             else:        
-                messages.error(request, 'Error: El Problema no pudo ser resulto, posibles soluciones infinitas.')
+                messages.error(request, 'Error: El Problema no pudo ser resuelto, posibles soluciones infinitas.')
 
             context = {
+                'showMain': True,
+                'showModel': True,
+                'showResults': True,
                 'operation': run.operation,
                 'model': run.modelString,
                 'allTables': run.allTables,
@@ -81,13 +84,14 @@ def model(request):
                 'restrictions': {
                     'value': int(totalConstraints),
                     'range': range(1, int(totalConstraints)+1)
-                },
-                'showModel': True,
-                'showResults': True
+                }
             }
             return render(request, 'model/model.html', context)
         else:
-            return render(request, 'model/model.html', {})
+            context = {
+                'showMain': True
+            }
+            return render(request, 'model/model.html', context)
         
     if request.method == 'POST':
         restrictions = request.POST.get('restrictions')

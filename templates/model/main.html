@@ -1,0 +1,69 @@
+<style>
+    #mainTitle{
+        font-weight: bold;
+        color: #0f0;
+    }
+
+    select.form-select{
+        border-color: #333;
+        background-color: #333;
+        font-size: 1.25rem;
+        color: #f8f9fa;
+    }
+
+    button.btn.btnMain {
+        width: 8rem;
+        height: 3rem;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        background-color: #0f0;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #000;
+    }
+
+    button.btn.btnMain:hover {
+        background-color: rgb(19, 128, 19);
+        font-weight: bold;
+        color: #f8f9fa;
+    }
+</style>
+
+<div class="card">
+    <div class="card-body pt-5 pb-5">
+        <form action="{% url 'model' %}" method="get">
+            {% csrf_token %}
+            <input type="hidden" name="getType" value="model">
+            {% if showMainMessage %}
+            <div class="d-flex justify-content-center">
+                {% include 'maxMinApp/messages.html' %}
+            </div>
+            {% endif %}
+            <h2 class="row mb-3 justify-content-center" id="mainTitle">Calculadora Simplex</h2>
+            <div class="row mb-3 justify-content-center">
+                <div class="col-12 col-md-6">
+                    <select class="form-select" aria-label="Default select example" name="operation">
+                        <option selected value="max">Maximizar</option>
+                        <option value="min">Minimizar</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3 justify-content-center">
+                <div class="col-12 col-md-4">
+                    <label for="variables" class="form-label"><h4>Número de variables:</h4></label>
+                    <input type="number" class="form-control" name="variables" required min="2"
+                        placeholder="2">
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="restrictions" class="form-label"><h4>Número de restricciones:</h4></label>
+                    <input type="number" class="form-control" name="restrictions" required min="1"
+                        placeholder="1">
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btnMain"
+                    name="generateModelBtn">GENERAR</button>
+            </div>
+        </form>
+    </div>
+</div>

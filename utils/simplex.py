@@ -12,9 +12,10 @@ class Simplex:
     lastTable = {}
     allTables = []
     solution = {}
+    errors = []
     solved = False
 
-    # operation para definir que se va a resolver, ejercicio de maximizacion 'max' o minimizacion 'min'.
+    # operation para definir que se va a resolver, ejercicio de maximización 'max' o minimización 'min'.
     # nRes, nVar son el numero de restricciones y variables del problema.
     # objFun es un arreglo del tipo ['x1', 'x2', 'x3', ...] con los coeficientes de cada variable en la función objetivo.
     # constraints es una matriz del tipo [['x1', 'x2', 'x3', ..., ('<=' o '>='), 'R'], ['x1', 'x2', 'x3', ..., ('<=' o '>='), 'R'], ...] 
