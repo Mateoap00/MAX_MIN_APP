@@ -1,4 +1,18 @@
 <style>
+    #solveTitle {
+        font-weight: bold;
+    }
+
+    #tables-body {
+        background-color: #222;
+    }    
+
+    #tables-body h2,
+    #tables-body h3,
+    #tables-body h4 {
+        color: #0f0;
+    }
+
     .table-wrapper {
         width: auto;
         height: auto;
@@ -12,30 +26,24 @@
 
     th {
         text-align: center;
-        background-color: #f8f9fa;
         color: #0f0;
+    }
+
+    th.rowName {
+        background-color: #111;
+        color: #0f0;
+    }
+
+    th.pivotRowName {
+        color: #111;
     }
 
     tr {
         background-color: #333;
     }
 
-    tr:hover {
-        background-color: #222;
-    }
-
-    #tables-body {
-        background-color: #222;
-    }
-
-    #solveTitle {
-        font-weight: bold;
-    }
-
-    #tables-body h2,
-    #tables-body h3,
-    #tables-body h4 {
-        color: #0f0;
+    thead tr {
+        background-color: #111;
     }
 
     #tables-body li,
@@ -53,9 +61,27 @@
         background-color: rgb(19, 128, 19);
         font-weight: bold;
         color: #000;
-    }
+    }    
 
     #tables-body .pivotRow td {
+        color: #000;
+    }
+
+    #tables-body td.pivotNum{
+        background-color: #222;
+        font-weight: bold;
+        color: #0f0;
+    }
+
+    #lastTable th.RColName {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #000;
+    }
+
+    #lastTable .RColValues {
+        background-color: #f8f9fa;
+        font-weight: bold;
         color: #000;
     }
 
@@ -103,7 +129,7 @@
                 </ol>
                 <h3>Tabla Inicial</h3>
                 <div class="table-wrapper">
-                    <table class="table table-bordered">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th scope="col">{{ firstTable.tableName }}</th>
@@ -115,7 +141,7 @@
                         <tbody class="table-group-divider">
                             {% for row in firstTable.table %}
                             <tr>
-                                <th scope="row">{{ row }}</th>
+                                <th scope="row" class="rowName">{{ row }}</th>
                                 {% for value in firstTable.table|get_dict_value:row %}
                                 <td>{{ value }}</td>
                                 {% endfor %}
@@ -127,48 +153,50 @@
                 <h3>Método Simplex</h3>
                 {% for tbl in allTables %}
                 <h4>Tabla {{tbl.tableName}}</h4>
-                <div class="table-wrapper">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">{{ tbl.tableName }}</th>
-                                {% for colName in tbl.colsNames %}
-                                {% if forloop.counter0 == tbl.pivotCol.colNum%}
-                                <th scope="col" class="pivotCol">{{ colName }}</th>
+                <div class="mb-3">
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ tbl.tableName }}</th>
+                                    {% for colName in tbl.colsNames %}
+                                    {% if forloop.counter0 == tbl.pivotCol.colNum%}
+                                    <th scope="col" class="pivotCol">{{ colName }}</th>
+                                    {% else %}
+                                    <th scope="col">{{ colName }}</th>
+                                    {% endif%}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for row in tbl.table %}
+                                {% if forloop.counter0 == tbl.pivotRow.rowNum%}
+                                <tr class="pivotRow">
+                                    <th scope="row" class="pivotRowName">{{ row }}</th>
+                                    {% for value in tbl.table|get_dict_value:row %}
+                                    {% if forloop.counter0 == tbl.pivotCol.colNum%}
+                                    <td class="pivotNum">{{ value }}</td>
+                                    {% else %}
+                                    <td>{{ value }}</td>
+                                    {% endif%}
+                                    {% endfor %}
+                                </tr>
                                 {% else %}
-                                <th scope="col">{{ colName }}</th>
+                                <tr>
+                                    <th scope="row" class="rowName">{{ row }}</th>
+                                    {% for value in tbl.table|get_dict_value:row %}
+                                    {% if forloop.counter0 == tbl.pivotCol.colNum%}
+                                    <td class="pivotCol">{{ value }}</td>
+                                    {% else %}
+                                    <td>{{ value }}</td>
+                                    {% endif%}
+                                    {% endfor %}
+                                </tr>
                                 {% endif%}
                                 {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% for row in tbl.table %}
-                            {% if forloop.counter0 == tbl.pivotRow.rowNum%}
-                            <tr class="pivotRow">
-                                <th scope="row">{{ row }}</th>
-                                {% for value in tbl.table|get_dict_value:row %}
-                                {% if forloop.counter0 == tbl.pivotCol.colNum%}
-                                <td class="pivotCol">{{ value }}</td>
-                                {% else %}
-                                <td>{{ value }}</td>
-                                {% endif%}
-                                {% endfor %}
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <th scope="row">{{ row }}</th>
-                                {% for value in tbl.table|get_dict_value:row %}
-                                {% if forloop.counter0 == tbl.pivotCol.colNum%}
-                                <td class="pivotCol">{{ value }}</td>
-                                {% else %}
-                                <td>{{ value }}</td>
-                                {% endif%}
-                                {% endfor %}
-                            </tr>
-                            {% endif%}
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <ul>
                     <li><strong>Columna pivote: </strong>{{tbl.pivotCol.colName}}</li>
@@ -181,27 +209,37 @@
 
                 {% if solved %}
                 <h3>Tabla Final</h3>
-                <div class="table-wrapper">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">{{ lastTable.tableName }}</th>
-                                {% for colName in lastTable.colsNames %}
-                                <th scope="col">{{ colName }}</th>
+                <div class="mb-3">
+                    <div class="table-wrapper">
+                        <table class="table" id="lastTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{{ lastTable.tableName }}</th>
+                                    {% for colName in lastTable.colsNames %}
+                                    {% if forloop.last %}
+                                    <th scope="col" class="RColName">{{ colName }}</th>
+                                    {% else %}
+                                    <th scope="col">{{ colName }}</th>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for row in lastTable.table %}
+                                <tr>
+                                    <th scope="row" class="rowName">{{ row }}</th>
+                                    {% for value in lastTable.table|get_dict_value:row %}
+                                    {% if forloop.last %}
+                                    <td class="RColValues">{{ value }}</td>
+                                    {% else %}
+                                    <td>{{ value }}</td>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
                                 {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-                            {% for row in lastTable.table %}
-                            <tr>
-                                <th scope="row">{{ row }}</th>
-                                {% for value in lastTable.table|get_dict_value:row %}
-                                <td>{{ value }}</td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <h3 class="mb-3 d-flex justify-content-center">Solución:</h3>

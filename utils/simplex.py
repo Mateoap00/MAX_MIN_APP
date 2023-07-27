@@ -26,6 +26,7 @@ class Simplex:
         self.nVar = nVar
         self.nRes = nRes
         self.allTables = []
+        self.errors = []
         self.model(objFun, constraints)
         self.solve()
 
@@ -72,15 +73,19 @@ class Simplex:
         try:
             self.simplex_method(self.objFun, self.constraints)
         except ZeroDivisionError:
-            print("Error: Division by zero occurred.")
+            self.solved = False
+            self.errors.append('Error: Division para cero, no es posible encontrar la optimización del problema.')
 
     def format_fraction(self, value):
-        if value == 0:
-            return '0'
-        elif value.denominator == 1:
-            return str(value.numerator)
-        else:
-            return f"{value.numerator}/{value.denominator}"
+        try:
+            if value == 0:
+                return '0'
+            elif value.denominator == 1:
+                return str(value.numerator)
+            else:
+                return f"{value.numerator}/{value.denominator}"
+        except AttributeError:
+            self.solved = False
         
     def format_table(self, type, simplex_table, table_name, colsNames, rowsNames, pivot_col, pivot_row, pivot_value, entering_row, table_values):
         colsNames = colsNames.copy()
@@ -234,10 +239,27 @@ class Simplex:
             tableNum = tableNum + 1
 
             # Columna pivote, la columna con el menor numero negativo cuando se maximiza y mayor numero positivo cuando se minimiza.
-            if self.operation == 'max':
-                pivot_column = np.argmin(simplex_table[0][:-1])            
+            objRowCopy = np.copy(simplex_table[0][:-1])
+            if self.operation == 'max':                
+                objRowCopy[objRowCopy == 0] = np.inf
+                negatives = objRowCopy[objRowCopy < 0]
+                if len(negatives) == 0:
+                    done = True
+                    self.solved = False
+                    self.errors.append('Error: No se puede determinar la columna pivote para empezar la optimización del problema de maximización.')
+                    break
+                else:
+                    pivot_column = np.argmin(simplex_table[0][:-1])         
             elif self.operation == 'min':
-                pivot_column = np.argmax(simplex_table[0][:-1])
+                objRowCopy[objRowCopy == 0] = -np.inf
+                positives = objRowCopy[objRowCopy > 0]
+                if len(positives) == 0:
+                    done = True
+                    self.solved = False
+                    self.errors.append('Error: No se puede determinar la columna pivote para empezar la optimización del problema de minimización.')
+                    break
+                else:
+                    pivot_column = np.argmax(simplex_table[0][:-1])
 
             # Fila pivote.
             pivot_row = -1

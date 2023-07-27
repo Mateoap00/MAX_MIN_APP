@@ -63,8 +63,9 @@ def model(request):
 
             if run.solved == True:
                 messages.success(request, 'Problema optimizado y solución encontrada.')
-            else:        
-                messages.error(request, 'Error: El Problema no pudo ser resuelto, posibles soluciones infinitas.')
+            else:
+                for error in run.errors:
+                    messages.error(request, error)
 
             context = {
                 'showMain': True,
