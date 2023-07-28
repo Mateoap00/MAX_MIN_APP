@@ -1,10 +1,10 @@
 <style>
-    #inputModelTitle{
+    #inputModelTitle {
         font-weight: bold;
         color: #0f0;
     }
 
-    select.form-select.resEqSign{
+    select.form-select.resEqSign {
         border-color: #0f0;
         background-color: #0f0;
         font-size: 1.25rem;
@@ -15,8 +15,6 @@
     button.btn.btnInputModel {
         width: 8rem;
         height: 3rem;
-        margin-left: 0.25rem;
-        margin-right: 0.25rem;
         background-color: #0f0;
         font-size: 1.25rem;
         font-weight: bold;
@@ -26,6 +24,28 @@
     button.btn.btnInputModel:hover {
         background-color: rgb(19, 128, 19);
         font-weight: bold;
+        color: #f8f9fa;
+    }
+
+    #btnNew {
+        width: 8rem;
+        height: 3rem;
+        padding: 0.5rem 2.25rem 0.5rem 2.25rem;
+        text-decoration: none;
+        justify-content: center;
+        display: block;
+        color: #222;
+        background: #0f0;
+        font-size: 1.25rem;
+        font-weight: bold;
+        outline: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #btnNew:hover {
+        background: rgb(19, 128, 19);
         color: #f8f9fa;
     }
 </style>
@@ -103,9 +123,15 @@
                 {% endfor %}
 
                 <div class="mt-4 d-flex justify-content-center">
-                    <button type="submit" class="btn btnInputModel" id="resolveModelBtn"
-                        name="resolveModelBtn">RESOLVER</button>
-                    <button type="submit" class="btn btnInputModel" id="limpiarTabla" name="limpiarTabla">NUEVO</button>
+                    <div class="row">
+                        <div class="col-12 col-sm-6 d-flex justify-content-center">
+                            <button type="submit" class="btn btnInputModel" id="resolveModelBtn"
+                                name="resolveModelBtn">RESOLVER</button>
+                        </div>
+                        <div class="col-12 col-sm-6 d-flex justify-content-center">
+                            <a href="/model" id="btnNew">NUEVO</a>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
